@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mancing_app/first_page.dart';
+import 'package:mancing_app/page/first_page.dart';
 
 void main() {
   // WidgetsFlutterBinding.ensureInitialized();

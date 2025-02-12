@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mancing_app/page/login_page.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -65,7 +66,13 @@ class _FirstPageState extends State<FirstPage> {
                     child: Align(
                         alignment: Alignment.center,
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF034D40),
                               foregroundColor: Colors.white,
@@ -85,11 +92,7 @@ class _FirstPageState extends State<FirstPage> {
                                 fontWeight: FontWeight.w500,
                                 color: Colors.white),
                           ),
-                          
-                          
-                        )
-                      )
-                    )
+                        )))
               ],
             ),
           )),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578597371495",
+    "project_id": "mobile-login-349af",
+    "storage_bucket": "mobile-login-349af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578597371495:android:d69bacb8dfa1210bd01ec2",
+        "android_client_info": {
+          "package_name": "com.example.mancing_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeEujs4Dq_3h-58k0KVL-kvS_0TlESOeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

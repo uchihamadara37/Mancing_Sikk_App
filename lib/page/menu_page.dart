@@ -13,6 +13,8 @@ class _MenuPageState extends State<MenuPage> {
   final List<Widget> _pages = [
     CalculatorPage(),
     OddEvenPage(),
+    TeamMembersPage(),
+    SumCalculatorPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -31,11 +33,17 @@ class _MenuPageState extends State<MenuPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.calculate), label: "Kalkulator"),
-          BottomNavigationBarItem(icon: Icon(Icons.filter_1), label: "Ganjil/Genap"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calculate), label: "Kalkulator"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.filter_1), label: "Ganjil/Genap"),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: "Anggota"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calculate_rounded), label: "Jumlah Total"),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
     );
@@ -54,6 +62,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
   final TextEditingController num1Controller = TextEditingController();
   final TextEditingController num2Controller = TextEditingController();
   String _result = "Hasil: ";
+
+  @override
+  void dispose() {
+    num1Controller.dispose();
+    num2Controller.dispose();
+    super.dispose();
+  }
 
   void _calculate(bool isAddition) {
     double num1 = double.tryParse(num1Controller.text) ?? 0;
@@ -126,6 +141,12 @@ class _OddEvenPageState extends State<OddEvenPage> {
   final TextEditingController numberController = TextEditingController();
   String _result = "Masukkan angka";
 
+  @override
+  void dispose() {
+    numberController.dispose();
+    super.dispose();
+  }
+
   void _checkOddEven() {
     int num = int.tryParse(numberController.text) ?? 0;
     setState(() {
@@ -152,6 +173,112 @@ class _OddEvenPageState extends State<OddEvenPage> {
           ElevatedButton(
             onPressed: _checkOddEven,
             child: Text("Cek Ganjil/Genap"),
+          ),
+          SizedBox(height: 20),
+          Text(
+            _result,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ======================= Anggota Kelompok =======================
+class TeamMembersPage extends StatelessWidget {
+  const TeamMembersPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Anggota Kelompok",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Ahmad Zakaria"),
+              subtitle: Text("123220077"),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Andrea Alfian"),
+              subtitle: Text("123220078"),
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.person),
+              title: Text("Panji Arif Jafarudin"),
+              subtitle: Text("123220089"),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ======================= Jumlah Total Angka =======================
+class SumCalculatorPage extends StatefulWidget {
+  const SumCalculatorPage({super.key});
+
+  @override
+  State<SumCalculatorPage> createState() => _SumCalculatorPageState();
+}
+
+class _SumCalculatorPageState extends State<SumCalculatorPage> {
+  final TextEditingController numberController = TextEditingController();
+  String _result = "Total: 0 dan banyak angka : 0";
+
+  @override
+  void dispose() {
+    numberController.dispose();
+    super.dispose();
+  }
+
+  void _calculateSum() {
+    String input = numberController.text;
+    int sum = 0;
+
+    for (int i = 0; i < input.length; i++) {
+      sum += int.tryParse(input[i]) ?? 0;
+    }
+
+    setState(() {
+      _result = "Total: $sum dan banyak angka : ${input.length}";
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: numberController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Masukkan Angka",
+              border: OutlineInputBorder(),
+              hintText: "Contoh: 12345",
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _calculateSum,
+            child: Text("Hitung Total"),
           ),
           SizedBox(height: 20),
           Text(

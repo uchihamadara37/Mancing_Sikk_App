@@ -232,7 +232,7 @@ class MemberCard extends StatelessWidget {
   }
 }
 
-// ======================= Halaman Jumlah Total Angka =======================
+// ======================= Jumlah Total Angka =======================
 class SumCalculatorPage extends StatefulWidget {
   const SumCalculatorPage({super.key});
 
@@ -242,23 +242,36 @@ class SumCalculatorPage extends StatefulWidget {
 
 class _SumCalculatorPageState extends State<SumCalculatorPage> {
   final TextEditingController numberController = TextEditingController();
-  int _total = 0;
-  int _panjang = 0;
+  String _result = "Total: 0 dan banyak angka : 0";
+  String _sumSomeChar = "Angka 1 muncul sebanyak 0 kali";
+
+  @override
+  void dispose() {
+    numberController.dispose();
+    super.dispose();
+  }
 
   void _calculateSum() {
     String input = numberController.text;
     int sum = 0;
 
-    // Menghitung jumlah setiap digit
+    Map<String, int> digitCount = {};
     for (int i = 0; i < input.length; i++) {
-      if (int.tryParse(input[i]) != null) {
-        sum += int.parse(input[i]);
-      }
+      sum += int.tryParse(input[i]) ?? 0;
+      digitCount[input[i]] = (digitCount[input[i]] ?? 0) + 1;
     }
+    setState(() {
+      _sumSomeChar = '';
+      for (int i = 0; i <= 9; i++) {
+        int count = digitCount['$i'] ?? 0;
+        if (count > 0) {
+          _sumSomeChar += "Angka $i muncul sebanyak $count kali\n";
+        }
+      }
+    });
 
     setState(() {
-      _total = sum;
-      _panjang = input.length;
+      _result = "Total: $sum dan banyak angka : ${input.length}";
     });
   }
 
@@ -274,8 +287,8 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
               labelText: "Masukkan Angka",
-              hintText: "Contoh: 12345",
               border: OutlineInputBorder(),
+              hintText: "Contoh: 12345",
             ),
           ),
           SizedBox(height: 20),
@@ -285,8 +298,13 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           ),
           SizedBox(height: 20),
           Text(
-            "Total: $_total dari $_panjang digit",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            _sumSomeChar,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20),
+          Text(
+            _result,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),

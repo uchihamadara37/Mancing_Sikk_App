@@ -199,7 +199,7 @@ class TeamMembersPage extends StatelessWidget {
           SizedBox(height: 10),
           MemberCard(
             name: "Panji Arif Jafarudin",
-            nim: "123220089",
+            nim: "123220091",
           ),
         ],
       ),

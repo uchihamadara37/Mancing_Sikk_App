@@ -1,7 +1,6 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:mancing_app/page/menu_page.dart';
+import 'package:mancing_A/page/menu_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,36 +10,68 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+
+  String? _errorMessage;
+
+  void _handleLogin() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() {
+        _errorMessage = 'Email dan password harus diisi!';
+      });
+      return;
+    }
+
+    if (email == "a" && password == "a") {
+      setState(() {
+        _errorMessage = null;
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MenuPage()),
+      );
+    } else {
+      setState(() {
+        _errorMessage = 'Email atau password salah!';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[50], // Warna latar belakang
+      backgroundColor: Colors.blue[50],
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage(
-            "assets/contour.png",
+          image: DecorationImage(
+            image: AssetImage("assets/contour.png"),
+            fit: BoxFit.cover,
           ),
-          fit: BoxFit.cover, // Fitting gambar sesuai container
-        )),
+        ),
         child: Center(
           child: ClipRRect(
-            // borderRadius: BorderRadius.circular(20), // Membatasi efek blur hanya di dalam
             child: BackdropFilter(
-              filter:
-                  ImageFilter.blur(sigmaX: 10, sigmaY: 10), // Blur efek kaca
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(
                 width: MediaQuery.of(context).size.width - 40,
-                height: 355,
+                height: _errorMessage != null ? 385 : 355,
                 decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.white,
-                    )),
+                  color: Colors.white.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.white,
+                  ),
+                ),
                 child: Padding(
                   padding: EdgeInsets.all(24.0),
                   child: Column(
@@ -62,29 +93,32 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 20),
                       TextField(
+                        controller: _emailController,
                         decoration: InputDecoration(
                           labelText: "Email",
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(12), // Border default
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                                color: Color(0xFF0F882D).withValues(alpha: 0.2),
-                                width: 2), // Warna border normal
+                              color: Color(0xFF0F882D).withOpacity(0.2),
+                              width: 2,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                                color: Color(0xFF0F882D),
-                                width: 2), // Warna border saat fokus
+                              color: Color(0xFF0F882D),
+                              width: 2,
+                            ),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                                color: Colors.red,
-                                width: 2), // Warna border saat error
+                              color: Colors.red,
+                              width: 2,
+                            ),
                           ),
                           prefixIcon:
                               Icon(Icons.email, color: Color(0xFF0F882D)),
@@ -93,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 15),
                       TextField(
+                        controller: _passwordController,
                         decoration: InputDecoration(
                           labelText: "Password",
                           border: OutlineInputBorder(
@@ -101,45 +136,60 @@ class _LoginPageState extends State<LoginPage> {
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                                color: Color(0xFF0F882D).withValues(alpha: 0.2),
-                                width: 2), // Warna border normal
+                              color: Color(0xFF0F882D).withOpacity(0.2),
+                              width: 2,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                                color: Color(0xFF0F882D),
-                                width: 2), // Warna border saat fokus
+                              color: Color(0xFF0F882D),
+                              width: 2,
+                            ),
                           ),
                           errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(
-                                color: Colors.red,
-                                width: 2), // Warna border saat error
+                              color: Colors.red,
+                              width: 2,
+                            ),
                           ),
                           prefixIcon: Icon(
                             Icons.lock,
                             color: Color(0xFF0F882D),
                           ),
-                          suffixIcon: Icon(Icons
-                              .visibility_off), // Ikon untuk toggle password
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Color(0xFF0F882D),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                       ),
+                      if (_errorMessage != null) ...[
+                        SizedBox(height: 10),
+                        Text(
+                          _errorMessage!,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                       SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Aksi login di sini
-                            print("Login ditekan");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MenuPage()),
-                            );
-
-                          },
+                          onPressed: _handleLogin,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF0F882D),
                             shape: RoundedRectangleBorder(
@@ -152,14 +202,15 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      // SizedBox(height: 10),
                       Center(
                         child: TextButton(
                           onPressed: () {
                             print("Lupa password ditekan");
                           },
-                          child: Text("Lupa Password?",
-                              style: TextStyle(color: Colors.blueAccent)),
+                          child: Text(
+                            "Lupa Password?",
+                            style: TextStyle(color: Colors.blueAccent),
+                          ),
                         ),
                       ),
                     ],
@@ -171,5 +222,12 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

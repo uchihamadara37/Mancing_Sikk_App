@@ -13,6 +13,8 @@ class _MenuPageState extends State<MenuPage> {
   final List<Widget> _pages = [
     CalculatorPage(),
     OddEvenPage(),
+    TeamMembersPage(),
+    SumCalculatorPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -31,12 +33,17 @@ class _MenuPageState extends State<MenuPage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.calculate), label: "Kalkulator"),
-          BottomNavigationBarItem(icon: Icon(Icons.filter_1), label: "Ganjil/Genap"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calculate), label: "Kalkulator"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.filter_1), label: "Ganjil/Genap"),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: "Anggota"),
+          BottomNavigationBarItem(icon: Icon(Icons.summarize), label: "Total"),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed, // Untuk menampilkan semua item
       ),
     );
   }
@@ -157,6 +164,129 @@ class _OddEvenPageState extends State<OddEvenPage> {
           Text(
             _result,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ======================= Halaman Anggota Kelompok =======================
+class TeamMembersPage extends StatelessWidget {
+  const TeamMembersPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Anggota Kelompok:",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 20),
+          MemberCard(
+            name: "Ahmad Zakaria",
+            nim: "123220077",
+          ),
+          SizedBox(height: 10),
+          MemberCard(
+            name: "Andrea Alfian",
+            nim: "123220078",
+          ),
+          SizedBox(height: 10),
+          MemberCard(
+            name: "Panji Arif Jafarudin",
+            nim: "123220089",
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MemberCard extends StatelessWidget {
+  final String name;
+  final String nim;
+
+  const MemberCard({
+    required this.name,
+    required this.nim,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 3,
+      child: ListTile(
+        leading: CircleAvatar(
+          child: Text(name[0]), // Menampilkan huruf pertama nama
+        ),
+        title: Text(name),
+        subtitle: Text("NIM: $nim"),
+      ),
+    );
+  }
+}
+
+// ======================= Halaman Jumlah Total Angka =======================
+class SumCalculatorPage extends StatefulWidget {
+  const SumCalculatorPage({super.key});
+
+  @override
+  State<SumCalculatorPage> createState() => _SumCalculatorPageState();
+}
+
+class _SumCalculatorPageState extends State<SumCalculatorPage> {
+  final TextEditingController numberController = TextEditingController();
+  int _total = 0;
+  int _panjang = 0;
+
+  void _calculateSum() {
+    String input = numberController.text;
+    int sum = 0;
+
+    // Menghitung jumlah setiap digit
+    for (int i = 0; i < input.length; i++) {
+      if (int.tryParse(input[i]) != null) {
+        sum += int.parse(input[i]);
+      }
+    }
+
+    setState(() {
+      _total = sum;
+      _panjang = input.length;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextField(
+            controller: numberController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Masukkan Angka",
+              hintText: "Contoh: 12345",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _calculateSum,
+            child: Text("Hitung Total"),
+          ),
+          SizedBox(height: 20),
+          Text(
+            "Total: $_total dari $_panjang digit",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ],
       ),

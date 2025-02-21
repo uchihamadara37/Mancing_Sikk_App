@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mancing_app/page/login_page.dart';
+import 'package:mancing_A/page/login_page.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});

@@ -219,7 +219,7 @@ class TeamMembersPage extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.person),
               title: Text("Panji Arif Jafarudin"),
-              subtitle: Text("123220089"),
+              subtitle: Text("123220091"),
             ),
           ),
         ],
@@ -239,6 +239,7 @@ class SumCalculatorPage extends StatefulWidget {
 class _SumCalculatorPageState extends State<SumCalculatorPage> {
   final TextEditingController numberController = TextEditingController();
   String _result = "Total: 0 dan banyak angka : 0";
+  String _sumSomeChar = "Angka 1 muncul sebanyak 0 kali";
 
   @override
   void dispose() {
@@ -250,9 +251,20 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
     String input = numberController.text;
     int sum = 0;
 
+    Map<String, int> digitCount = {};
     for (int i = 0; i < input.length; i++) {
       sum += int.tryParse(input[i]) ?? 0;
+      digitCount[input[i]] = (digitCount[input[i]] ?? 0) + 1;
     }
+    setState(() {
+      _sumSomeChar = '';
+      for (int i = 0; i <= 9; i++) {
+        int count = digitCount['$i'] ?? 0;
+        if (count > 0) {
+          _sumSomeChar += "Angka $i muncul sebanyak $count kali\n";
+        }
+      }
+    });
 
     setState(() {
       _result = "Total: $sum dan banyak angka : ${input.length}";
@@ -279,6 +291,11 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           ElevatedButton(
             onPressed: _calculateSum,
             child: Text("Hitung Total"),
+          ),
+          SizedBox(height: 20),
+          Text(
+            _sumSomeChar,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 20),
           Text(

@@ -26,7 +26,19 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Menu Utama"), backgroundColor: Colors.green),
+      appBar: AppBar(
+          title: Text(
+            "Menu Utama",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white
+            ),
+          ),
+          backgroundColor: Colors.green,
+          iconTheme: IconThemeData(
+            color: Colors.white, // Changes the color of the back arrow
+          ),
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
@@ -60,7 +72,37 @@ class CalculatorPage extends StatefulWidget {
 class _CalculatorPageState extends State<CalculatorPage> {
   final TextEditingController num1Controller = TextEditingController();
   final TextEditingController num2Controller = TextEditingController();
-  String _result = "Hasil: ";
+  String _result = "0";
+  String _operator = "?";
+
+  @override
+  void initState() {
+    super.initState();
+    num1Controller.addListener(_updateResult);
+    num2Controller.addListener(_updateResult);
+  }
+
+  @override
+  void dispose() {
+    num1Controller.dispose();
+    num2Controller.dispose();
+    super.dispose();
+  }
+
+  void _updateResult() {
+    if (_operator != "?") {
+      double num1 = double.tryParse(num1Controller.text) ?? 0;
+      double num2 = double.tryParse(num2Controller.text) ?? 0;
+      double result = _operator == "+" ? num1 + num2 : num1 - num2;
+      setState(() {
+        _result = "$result";
+      });
+    } else {
+      setState(() {
+        _result = "0";
+      });
+    }
+  }
 
   void _calculate(bool isAddition) {
     double num1 = double.tryParse(num1Controller.text) ?? 0;
@@ -68,8 +110,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
     double result = isAddition ? num1 + num2 : num1 - num2;
 
     setState(() {
-      _result = "Hasil: $result";
+      _operator = isAddition ? "+" : "-";
+      _result = "$result";
     });
+    _updateResult();
   }
 
   @override
@@ -79,41 +123,86 @@ class _CalculatorPageState extends State<CalculatorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextField(
-            controller: num1Controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: "Angka Pertama",
-              border: OutlineInputBorder(),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black54,
+                width: 1.0
+              ),
+              borderRadius: BorderRadius.circular(4),
             ),
-          ),
-          SizedBox(height: 10),
-          TextField(
-            controller: num2Controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: "Angka Kedua",
-              border: OutlineInputBorder(),
+            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                _result,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           SizedBox(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () => _calculate(true),
-                child: Text("Tambah"),
+              Expanded(
+                child: TextField(
+                  controller: num1Controller,
+                  keyboardType: TextInputType.number,
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: "Angka Pertama",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () => _calculate(false),
-                child: Text("Kurang"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  _operator,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: num2Controller,
+                  keyboardType: TextInputType.number,
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: "Angka Kedua",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  ),
+                ),
               ),
             ],
           ),
           SizedBox(height: 20),
-          Text(
-            _result,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () => _calculate(true),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
+                  padding: EdgeInsets.all(20),
+                  backgroundColor: Colors.green, // <-- Button color
+                  foregroundColor: Colors.white, // <-- Splash color
+                ),
+                child: Text("+", style: TextStyle(fontSize: 20)),
+              ),
+              ElevatedButton(
+                onPressed: () => _calculate(false),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
+                  padding: EdgeInsets.all(20),
+                  backgroundColor: Colors.green, // <-- Button color
+                  foregroundColor: Colors.white, // <-- Splash color
+                ),
+                child: Text("-", style: TextStyle(fontSize: 20)),
+              ),
+            ],
           ),
         ],
       ),
@@ -200,6 +289,11 @@ class TeamMembersPage extends StatelessWidget {
           MemberCard(
             name: "Panji Arif Jafarudin",
             nim: "123220091",
+          ),
+          SizedBox(height: 10),
+          MemberCard(
+            name: "Muhammad Islakha",
+            nim: "123210096",
           ),
         ],
       ),

@@ -380,7 +380,7 @@ class SumCalculatorPage extends StatefulWidget {
 class _SumCalculatorPageState extends State<SumCalculatorPage> {
   final TextEditingController numberController = TextEditingController();
   String _result = "Total: 0 dan banyak angka : 0";
-  String _sumSomeChar = "Angka 1 muncul sebanyak 0 kali";
+  String _sumSomeChar = "";
 
   @override
   void dispose() {
@@ -421,10 +421,15 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           TextField(
             controller: numberController,
             keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: "Masukkan Angka",
               border: OutlineInputBorder(),
               hintText: "Contoh: 12345",
+              contentPadding: EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: 16.0
+              ),
             ),
             onChanged: (value) {
               _calculateSum();

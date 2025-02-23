@@ -26,7 +26,19 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Menu Utama"), backgroundColor: Colors.green),
+      appBar: AppBar(
+          title: Text(
+            "Menu Utama",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white
+            ),
+          ),
+          backgroundColor: Colors.green,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
@@ -43,7 +55,7 @@ class _MenuPageState extends State<MenuPage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed, // Untuk menampilkan semua item
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
@@ -60,7 +72,37 @@ class CalculatorPage extends StatefulWidget {
 class _CalculatorPageState extends State<CalculatorPage> {
   final TextEditingController num1Controller = TextEditingController();
   final TextEditingController num2Controller = TextEditingController();
-  String _result = "Hasil: ";
+  String _result = "0";
+  String _operator = "?";
+
+  @override
+  void initState() {
+    super.initState();
+    num1Controller.addListener(_updateResult);
+    num2Controller.addListener(_updateResult);
+  }
+
+  @override
+  void dispose() {
+    num1Controller.dispose();
+    num2Controller.dispose();
+    super.dispose();
+  }
+
+  void _updateResult() {
+    if (_operator != "?") {
+      double num1 = double.tryParse(num1Controller.text) ?? 0;
+      double num2 = double.tryParse(num2Controller.text) ?? 0;
+      double result = _operator == "+" ? num1 + num2 : num1 - num2;
+      setState(() {
+        _result = "$result";
+      });
+    } else {
+      setState(() {
+        _result = "0";
+      });
+    }
+  }
 
   void _calculate(bool isAddition) {
     double num1 = double.tryParse(num1Controller.text) ?? 0;
@@ -68,8 +110,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
     double result = isAddition ? num1 + num2 : num1 - num2;
 
     setState(() {
-      _result = "Hasil: $result";
+      _operator = isAddition ? "+" : "-";
+      _result = "$result";
     });
+    _updateResult();
   }
 
   @override
@@ -79,41 +123,86 @@ class _CalculatorPageState extends State<CalculatorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextField(
-            controller: num1Controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: "Angka Pertama",
-              border: OutlineInputBorder(),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black54,
+                width: 1.0
+              ),
+              borderRadius: BorderRadius.circular(4),
             ),
-          ),
-          SizedBox(height: 10),
-          TextField(
-            controller: num2Controller,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: "Angka Kedua",
-              border: OutlineInputBorder(),
+            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                _result,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           SizedBox(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                onPressed: () => _calculate(true),
-                child: Text("Tambah"),
+              Expanded(
+                child: TextField(
+                  controller: num1Controller,
+                  keyboardType: TextInputType.number,
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: "Angka Pertama",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () => _calculate(false),
-                child: Text("Kurang"),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  _operator,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  controller: num2Controller,
+                  keyboardType: TextInputType.number,
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: "Angka Kedua",
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  ),
+                ),
               ),
             ],
           ),
           SizedBox(height: 20),
-          Text(
-            _result,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () => _calculate(true),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
+                  padding: EdgeInsets.all(20),
+                  backgroundColor: Colors.green, // <-- Button color
+                  foregroundColor: Colors.white, // <-- Splash color
+                ),
+                child: Text("+", style: TextStyle(fontSize: 20)),
+              ),
+              ElevatedButton(
+                onPressed: () => _calculate(false),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),
+                  padding: EdgeInsets.all(20),
+                  backgroundColor: Colors.green, // <-- Button color
+                  foregroundColor: Colors.white, // <-- Splash color
+                ),
+                child: Text("-", style: TextStyle(fontSize: 20)),
+              ),
+            ],
           ),
         ],
       ),
@@ -132,11 +221,16 @@ class OddEvenPage extends StatefulWidget {
 class _OddEvenPageState extends State<OddEvenPage> {
   final TextEditingController numberController = TextEditingController();
   String _result = "Masukkan angka";
+  String _maxVal = "";
 
   void _checkOddEven() {
-    int num = int.tryParse(numberController.text) ?? 0;
+    int? num = int.tryParse(numberController.text);
     setState(() {
-      _result = num % 2 == 0 ? "Ini Genap" : "Ini Ganjil";
+      if (num != null) {
+        _result = num % 2 == 0 ? "Ini Genap" : "Ini Ganjil";
+      } else {
+        _result = "Bukan Angka Semua";
+      }
     });
   }
 
@@ -150,20 +244,44 @@ class _OddEvenPageState extends State<OddEvenPage> {
           TextField(
             controller: numberController,
             keyboardType: TextInputType.number,
+            maxLength: 30,
+            textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: "Masukkan Bilangan",
               border: OutlineInputBorder(),
+              counterText: "",
+              contentPadding: EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: 16.0
+              ),
             ),
+            onChanged: (value) {
+              if (value.length == 30) {
+                setState(() {
+                  _maxVal = "Udh bg jgn bnyk2";
+                });
+              } else if (value.isEmpty) {
+                setState(() {
+                  _maxVal = "";
+                  _result = "Masukkan angka";
+                });
+              }
+              else {
+                _maxVal = "";
+                _checkOddEven();
+              }
+            },
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _checkOddEven,
-            child: Text("Cek Ganjil/Genap"),
-          ),
+          Text(_maxVal),
           SizedBox(height: 20),
           Text(
             _result,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+            ),
           ),
         ],
       ),
@@ -183,8 +301,9 @@ class TeamMembersPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Anggota Kelompok:",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            "Anggota Kelompok",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
           ),
           SizedBox(height: 20),
           MemberCard(
@@ -200,6 +319,11 @@ class TeamMembersPage extends StatelessWidget {
           MemberCard(
             name: "Panji Arif Jafarudin",
             nim: "123220091",
+          ),
+          SizedBox(height: 10),
+          MemberCard(
+            name: "Muhammad Islakha",
+            nim: "123210096",
           ),
         ],
       ),
@@ -223,9 +347,22 @@ class MemberCard extends StatelessWidget {
       elevation: 3,
       child: ListTile(
         leading: CircleAvatar(
-          child: Text(name[0]), // Menampilkan huruf pertama nama
+          backgroundColor: Colors.green,
+          child: Text(
+              name[0],
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+          ),
         ),
-        title: Text(name),
+        title: Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+        ),
         subtitle: Text("NIM: $nim"),
       ),
     );
@@ -243,7 +380,7 @@ class SumCalculatorPage extends StatefulWidget {
 class _SumCalculatorPageState extends State<SumCalculatorPage> {
   final TextEditingController numberController = TextEditingController();
   String _result = "Total: 0 dan banyak angka : 0";
-  String _sumSomeChar = "Angka 1 muncul sebanyak 0 kali";
+  String _sumSomeChar = "";
 
   @override
   void dispose() {
@@ -257,8 +394,10 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
 
     Map<String, int> digitCount = {};
     for (int i = 0; i < input.length; i++) {
-      sum += int.tryParse(input[i]) ?? 0;
-      digitCount[input[i]] = (digitCount[input[i]] ?? 0) + 1;
+      if (int.tryParse(input[i]) != null) {
+        sum += int.tryParse(input[i])!;
+        digitCount[input[i]] = (digitCount[input[i]] ?? 0) + 1;
+      }
     }
     setState(() {
       _sumSomeChar = '';
@@ -268,10 +407,7 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           _sumSomeChar += "Angka $i muncul sebanyak $count kali\n";
         }
       }
-    });
-
-    setState(() {
-      _result = "Total: $sum dan banyak angka : ${input.length}";
+      _result = "Total: $sum dan banyak angka : ${input.replaceAll(RegExp(r'[^0-9]'), '').length}";
     });
   }
 
@@ -285,23 +421,27 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           TextField(
             controller: numberController,
             keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: "Masukkan Angka",
               border: OutlineInputBorder(),
               hintText: "Contoh: 12345",
+              contentPadding: EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: 16.0
+              ),
             ),
+            onChanged: (value) {
+              _calculateSum();
+            },
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _calculateSum,
-            child: Text("Hitung Total"),
-          ),
           SizedBox(height: 20),
           Text(
             _sumSomeChar,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 5),
           Text(
             _result,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

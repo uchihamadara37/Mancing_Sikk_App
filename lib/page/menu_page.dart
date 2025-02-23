@@ -394,8 +394,10 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
 
     Map<String, int> digitCount = {};
     for (int i = 0; i < input.length; i++) {
-      sum += int.tryParse(input[i]) ?? 0;
-      digitCount[input[i]] = (digitCount[input[i]] ?? 0) + 1;
+      if (int.tryParse(input[i]) != null) {
+        sum += int.tryParse(input[i])!;
+        digitCount[input[i]] = (digitCount[input[i]] ?? 0) + 1;
+      }
     }
     setState(() {
       _sumSomeChar = '';
@@ -405,10 +407,7 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           _sumSomeChar += "Angka $i muncul sebanyak $count kali\n";
         }
       }
-    });
-
-    setState(() {
-      _result = "Total: $sum dan banyak angka : ${input.length}";
+      _result = "Total: $sum dan banyak angka : ${input.replaceAll(RegExp(r'[^0-9]'), '').length}";
     });
   }
 
@@ -427,18 +426,17 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
               border: OutlineInputBorder(),
               hintText: "Contoh: 12345",
             ),
+            onChanged: (value) {
+              _calculateSum();
+            },
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _calculateSum,
-            child: Text("Hitung Total"),
-          ),
           SizedBox(height: 20),
           Text(
             _sumSomeChar,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 5),
           Text(
             _result,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

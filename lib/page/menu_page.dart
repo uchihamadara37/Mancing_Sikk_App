@@ -223,9 +223,13 @@ class _OddEvenPageState extends State<OddEvenPage> {
   String _result = "Masukkan angka";
 
   void _checkOddEven() {
-    int num = int.tryParse(numberController.text) ?? 0;
+    int? num = int.tryParse(numberController.text);
     setState(() {
-      _result = num % 2 == 0 ? "Ini Genap" : "Ini Ganjil";
+      if (num != null) {
+        _result = num % 2 == 0 ? "Ini Genap" : "Ini Ganjil";
+      } else {
+        _result = "Bukan Angka Semua";
+      }
     });
   }
 

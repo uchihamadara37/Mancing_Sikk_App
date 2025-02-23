@@ -36,7 +36,7 @@ class _MenuPageState extends State<MenuPage> {
           ),
           backgroundColor: Colors.green,
           iconTheme: IconThemeData(
-            color: Colors.white, // Changes the color of the back arrow
+            color: Colors.white,
           ),
       ),
       body: IndexedStack(
@@ -55,7 +55,7 @@ class _MenuPageState extends State<MenuPage> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed, // Untuk menampilkan semua item
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
@@ -221,6 +221,7 @@ class OddEvenPage extends StatefulWidget {
 class _OddEvenPageState extends State<OddEvenPage> {
   final TextEditingController numberController = TextEditingController();
   String _result = "Masukkan angka";
+  String _maxVal = "";
 
   void _checkOddEven() {
     int? num = int.tryParse(numberController.text);
@@ -243,20 +244,44 @@ class _OddEvenPageState extends State<OddEvenPage> {
           TextField(
             controller: numberController,
             keyboardType: TextInputType.number,
+            maxLength: 30,
+            textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: "Masukkan Bilangan",
               border: OutlineInputBorder(),
+              counterText: "",
+              contentPadding: EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: 16.0
+              ),
             ),
+            onChanged: (value) {
+              if (value.length == 30) {
+                setState(() {
+                  _maxVal = "Udh bg jgn bnyk2";
+                });
+              } else if (value.isEmpty) {
+                setState(() {
+                  _maxVal = "";
+                  _result = "Masukkan angka";
+                });
+              }
+              else {
+                _maxVal = "";
+                _checkOddEven();
+              }
+            },
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _checkOddEven,
-            child: Text("Cek Ganjil/Genap"),
-          ),
+          Text(_maxVal),
           SizedBox(height: 20),
           Text(
             _result,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+            ),
           ),
         ],
       ),
@@ -276,8 +301,9 @@ class TeamMembersPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Anggota Kelompok:",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            "Anggota Kelompok",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
           ),
           SizedBox(height: 20),
           MemberCard(
@@ -321,9 +347,22 @@ class MemberCard extends StatelessWidget {
       elevation: 3,
       child: ListTile(
         leading: CircleAvatar(
-          child: Text(name[0]), // Menampilkan huruf pertama nama
+          backgroundColor: Colors.green,
+          child: Text(
+              name[0],
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+          ),
         ),
-        title: Text(name),
+        title: Text(
+            name,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
+            ),
+        ),
         subtitle: Text("NIM: $nim"),
       ),
     );

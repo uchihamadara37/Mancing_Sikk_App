@@ -27,17 +27,14 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-            "Menu Utama",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-            ),
-          ),
-          backgroundColor: Colors.green,
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
+        title: Text(
+          "Menu Utama",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Colors.green,
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: IndexedStack(
         index: _selectedIndex,
@@ -125,10 +122,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black54,
-                width: 1.0
-              ),
+              border: Border.all(color: Colors.black54, width: 1.0),
               borderRadius: BorderRadius.circular(4),
             ),
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
@@ -146,13 +140,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
               Expanded(
                 child: TextField(
                   controller: num1Controller,
+                  maxLength: 20,
                   keyboardType: TextInputType.number,
                   textAlignVertical: TextAlignVertical.center,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     labelText: "Angka Pertama",
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                   ),
                 ),
               ),
@@ -167,12 +163,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 child: TextField(
                   controller: num2Controller,
                   keyboardType: TextInputType.number,
+                  maxLength: 20,
                   textAlignVertical: TextAlignVertical.center,
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     labelText: "Angka Kedua",
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
                   ),
                 ),
               ),
@@ -244,19 +242,17 @@ class _OddEvenPageState extends State<OddEvenPage> {
           TextField(
             controller: numberController,
             keyboardType: TextInputType.number,
-            maxLength: 30,
+            maxLength: 20,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: "Masukkan Bilangan",
               border: OutlineInputBorder(),
               counterText: "",
-              contentPadding: EdgeInsets.symmetric(
-                  vertical: 20.0,
-                  horizontal: 16.0
-              ),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
             ),
             onChanged: (value) {
-              if (value.length == 30) {
+              if (value.length > 19) {
                 setState(() {
                   _maxVal = "Udh bg jgn bnyk2";
                 });
@@ -265,8 +261,7 @@ class _OddEvenPageState extends State<OddEvenPage> {
                   _maxVal = "";
                   _result = "Masukkan angka";
                 });
-              }
-              else {
+              } else {
                 _maxVal = "";
                 _checkOddEven();
               }
@@ -278,9 +273,9 @@ class _OddEvenPageState extends State<OddEvenPage> {
           Text(
             _result,
             style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.green,
             ),
           ),
         ],
@@ -303,7 +298,8 @@ class TeamMembersPage extends StatelessWidget {
           Text(
             "Anggota Kelompok",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
+            style: TextStyle(
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
           ),
           SizedBox(height: 20),
           MemberCard(
@@ -349,19 +345,19 @@ class MemberCard extends StatelessWidget {
         leading: CircleAvatar(
           backgroundColor: Colors.green,
           child: Text(
-              name[0],
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            name[0],
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
         title: Text(
-            name,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.green,
-            ),
+          name,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
         ),
         subtitle: Text("NIM: $nim"),
       ),
@@ -407,7 +403,8 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
           _sumSomeChar += "Angka $i muncul sebanyak $count kali\n";
         }
       }
-      _result = "Total: $sum dan banyak angka : ${input.replaceAll(RegExp(r'[^0-9]'), '').length}";
+      _result =
+          "Total: $sum dan banyak angka : ${input.replaceAll(RegExp(r'[^0-9]'), '').length}";
     });
   }
 
@@ -420,16 +417,15 @@ class _SumCalculatorPageState extends State<SumCalculatorPage> {
         children: [
           TextField(
             controller: numberController,
+            maxLength: 20,
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               labelText: "Masukkan Angka",
               border: OutlineInputBorder(),
               hintText: "Contoh: 12345",
-              contentPadding: EdgeInsets.symmetric(
-                  vertical: 20.0,
-                  horizontal: 16.0
-              ),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
             ),
             onChanged: (value) {
               _calculateSum();

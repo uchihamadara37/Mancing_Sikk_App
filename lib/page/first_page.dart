@@ -23,7 +23,7 @@ class _FirstPageState extends State<FirstPage> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 80),
+            padding: const EdgeInsets.only(top: 120),
             child: Column(
               children: [
                 Text(
@@ -38,7 +38,7 @@ class _FirstPageState extends State<FirstPage> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 80,
                 ),
                 Container(
                     height: 4,
@@ -47,7 +47,7 @@ class _FirstPageState extends State<FirstPage> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10))),
                 SizedBox(
-                  height: 50,
+                  height: 100,
                 ),
                 Text(
                   "Aplikasi untuk lulusan Sarjana\nyang masih gabut di rumah.",
@@ -60,7 +60,7 @@ class _FirstPageState extends State<FirstPage> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
-                  height: 110,
+                  height: 160,
                 ),
                 Expanded(
                     child: Align(
